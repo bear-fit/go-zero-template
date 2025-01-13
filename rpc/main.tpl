@@ -52,6 +52,6 @@ func main() {
 		}
 	}
 
-	logx.Printf("Starting rpc server at %s...\n", c.ListenOn)
+	logx.Infof("Starting rpc server at %s...\n", c.ListenOn)
 	s.Start()
 }

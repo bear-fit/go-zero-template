@@ -3,12 +3,16 @@ type (
 		{{.method}}
 	}
 
+	CacheKeyGenerator func(data *{{.upperStartCamelObject}}) []string
+
 	default{{.upperStartCamelObject}}Model struct {
 		{{if .withCache}}sqlc.CachedConn{{else}}conn sqlx.SqlConn{{end}}
 		table 		string
 		redisCache 	*redis.Redis
 		conn       	sqlx.SqlConn
 		isCluster  	bool
+		keyGenerators []CacheKeyGenerator
+		patternGenerators []CacheKeyGenerator
 	}
 
 	{{.upperStartCamelObject}} struct {
