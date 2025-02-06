@@ -8,15 +8,18 @@ func (m *default{{.upperStartCamelObject}}Model) FindOneBy{{.upperField}}(ctx co
 	var resp {{.upperStartCamelObject}}
 	err := m.QueryRowIndexCtx(ctx, &resp, {{.cacheKeyVariable}}, m.formatPrimary, func(ctx context.Context, conn sqlx.SqlConn, v any) (i any, e error) {
 		var query string
+		var err error
 		if option.isSoftDelete {
 			query = fmt.Sprintf("select %s from %s where {{.originalField}} and deleted_at is null limit 1", {{.lowerStartCamelObject}}Rows, m.table)
 		} else {
 			query = fmt.Sprintf("select %s from %s where {{.originalField}} limit 1", {{.lowerStartCamelObject}}Rows, m.table)
 		}
 		if option.session != nil {
-			return option.session.QueryRowCtx(ctx, &resp, query, {{.lowerStartCamelField}})
+			err = option.session.QueryRowCtx(ctx, &resp, query, {{.lowerStartCamelField}})
+		} else {
+			err = conn.QueryRowCtx(ctx, &resp, query, {{.lowerStartCamelField}})
 		}
-		return conn.QueryRowCtx(ctx, &resp, query, {{.lowerStartCamelField}})
+		return resp.{{.upperStartCamelPrimaryKey}}, nil
 	}, m.queryPrimary)
 	switch err {
 	case nil:
