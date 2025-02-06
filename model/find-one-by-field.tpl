@@ -19,6 +19,9 @@ func (m *default{{.upperStartCamelObject}}Model) FindOneBy{{.upperField}}(ctx co
 		} else {
 			err = conn.QueryRowCtx(ctx, &resp, query, {{.lowerStartCamelField}})
 		}
+		if err != nil {
+			return nil, err
+		}
 		return resp.{{.upperStartCamelPrimaryKey}}, nil
 	}, m.queryPrimary)
 	switch err {
