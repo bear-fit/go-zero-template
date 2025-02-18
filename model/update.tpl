@@ -144,7 +144,7 @@ func (m *default{{.upperStartCamelObject}}Model) Delete(ctx context.Context, dat
 		} else {
 			query = fmt.Sprintf("delete from %s where {{.originalPrimaryKey}} = {{if .postgreSql}}$1{{else}}?{{end}}", m.table)
 		}
-		args = append(args, data.Id)
+		args = append(args, data.{{.originalPrimaryKey}})
 		if option.session != nil {
 			return option.session.ExecCtx(ctx, query, args...)
 		}
