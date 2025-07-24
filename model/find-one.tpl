@@ -53,7 +53,7 @@ func (m *default{{.upperStartCamelObject}}Model) FindList(ctx context.Context, p
 		opt(option)
 	}
 	{{if .withCache}}{{.lowerStartCamelObject}}IdKey := fmt.Sprintf("%s%v%v%v", cache{{.upperStartCamelObject}}ListPrefix, page, filters, orders)
-	{{.lowerStartCamelObject}}CountKey := fmt.Sprintf("%s%v%v%v", cache{{.upperStartCamelObject}}CountPrefix, page, filters, orders)
+	{{.lowerStartCamelObject}}CountKey := fmt.Sprintf("%s%v%v", cache{{.upperStartCamelObject}}CountPrefix, filters, orders)
 	var resp []*{{.upperStartCamelObject}}
 	var totalCount int32
 	err := m.QueryRowCtx(ctx, &resp, {{.lowerStartCamelObject}}IdKey, func(ctx context.Context, conn sqlx.SqlConn, v any) error {
