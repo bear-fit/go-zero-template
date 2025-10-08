@@ -110,6 +110,9 @@ func (m *default{{.upperStartCamelObject}}Model) addFilter(query string, filters
 		case "IS NULL", "IS NOT NULL":
 			query += fmt.Sprintf("`%s` %s", filter.Field, operator)
 
+		case "EXPR":
+			query += filter.Field
+
 		default:
 			query += fmt.Sprintf("`%s` %s ?", filter.Field, operator)
 			args = append(args, filter.Value)
