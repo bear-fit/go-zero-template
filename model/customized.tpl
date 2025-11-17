@@ -137,16 +137,6 @@ func (m *default{{.upperStartCamelObject}}Model) addOrder(query string, orders [
 }
 
 func (m *default{{.upperStartCamelObject}}Model) getFindsAllQueryString(page *{{.upperStartCamelObject}}Page, filters []*{{.upperStartCamelObject}}Filter, orders []*{{.upperStartCamelObject}}Order, softDelete bool) (string, []interface{}) {
-	if page == nil {
-		page = &{{.upperStartCamelObject}}Page{
-			Limit: 0,
-			Page:  0,
-		}
-	}
-	offset := (page.Page - 1) * page.Limit
-	if offset < 0 {
-		offset = 0
-	}
 	listQuery := "SELECT %s FROM %s"
 	if softDelete {
 		listQuery += " WHERE `deleted_at` IS NULL"
@@ -155,8 +145,9 @@ func (m *default{{.upperStartCamelObject}}Model) getFindsAllQueryString(page *{{
 	listQuery, orderArgs := m.addOrder(listQuery, orders)
 	args = append(args, orderArgs...)
 	
-	if page.Limit > 0 {
+	if page != nil && page.Limit > 0 {
 		listQuery += " LIMIT ? OFFSET ?"
+		offset := max((page.Page-1)*page.Limit, 0)
 		args = append(args, page.Limit, offset)
 	}
 	return listQuery, args
@@ -170,7 +161,6 @@ func (m *default{{.upperStartCamelObject}}Model) getFindsAllCountQueryString(fil
 	countQuery, args := m.addFilter(countQuery, filters, softDelete)
 	return countQuery, args
 }
-
 
 func migrateDB(path string, db *sql.DB) error {
 	driver, err := mysql.WithInstance(db, &{{if .postgreSql}}postgres{{else}}mysql{{end}}.Config{})

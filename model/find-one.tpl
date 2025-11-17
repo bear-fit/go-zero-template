@@ -110,5 +110,4 @@ func (m *default{{.upperStartCamelObject}}Model) FindList(ctx context.Context, p
 	default:
 		return nil, 0, err
 	}{{end}}
-
 }
